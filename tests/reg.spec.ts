@@ -1,102 +1,59 @@
 import { test, expect } from '@playwright/test';
+import { RegistrationPage } from '../page_objects/registrationPage';
 
-test('positiv', async ({ page }) => {
-  await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-  await page.getByRole('button', { name: 'Sign In' }).click();
-  await page.getByRole('button', { name: 'Registration' }).click();
-  await page.locator('#signupName').click();
-  await page.locator('#signupName').fill('vikatest');
-  await page.locator('#signupLastName').click();
-  await page.locator('#signupLastName').fill('vikatest');
-  await page.getByLabel('Name').click();
-  await page.getByLabel('Name').fill('vika@test.com');
-  await page.locator('#signupPassword').click();
-  await page.locator('#signupPassword').fill('Test1234567890');  
-  await page.getByLabel('Re-enter password').click();
-  await page.getByLabel('Re-enter password').fill('Test1234567890');
-  await page.getByRole('button', { name: 'Register' }).click();
+test('Positive Registration Test', async ({ page }) => {
+  const registrationPage = new RegistrationPage(page);
+  const uniqueEmail = `aqa-${Date.now()}@test.com`;
 
+  await registrationPage.navigateToRegistrationPage();
+
+
+  await registrationPage.fillRegistrationForm('vikatest', 'vikatest', uniqueEmail, 'Test1234567890');
+
+  await registrationPage.submitRegistration();
+
+  const userDropdown = page.locator('#userNavDropdown');
+  await expect(userDropdown).toBeVisible();
 
 });
+test('Negativ Name Test', async ({ page }) => {
+    const registrationPage = new RegistrationPage(page);
+    const uniqueEmail = `aqa-${Date.now()}@test.com`;
+  
+    await registrationPage.navigateToRegistrationPage();
+  
+    await registrationPage.fillRegistrationForm('....', 'vikatest', uniqueEmail, 'Test1234567890');
+  
+  });
 
-test('negativName', async ({ page }) => {
-  await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-  await page.getByRole('button', { name: 'Sign In' }).click();
-  await page.getByRole('button', { name: 'Registration' }).click();
-  await page.locator('#signupName').click();
-  await page.locator('#signupName').fill('pypi');
-  await page.locator('#signupLastName').click();
-  await page.locator('#signupLastName').fill('pypi');
-  await page.getByLabel('Name').click();
-  await page.getByLabel('Name').fill('....');
-  await page.locator('#signupPassword').click();
-  await page.locator('#signupPassword').fill('Test1234567890');  
-  await page.getByLabel('Re-enter password').click();
-  await page.getByLabel('Re-enter password').fill('Test1234567890');
- 
-});
-test('LastwrongName', async ({ page }) => {
-    await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await page.getByRole('button', { name: 'Registration' }).click();
-    await page.locator('#signupName').click();
-    await page.locator('#signupName').fill('vikatest');
-    await page.locator('#signupLastName').click();
-    await page.locator('#signupLastName').fill('Last name is invalid');
-    await page.getByLabel('Name').click();
-    await page.getByLabel('Name').fill('vika@test.com');
-    await page.locator('#signupPassword').click();
-    await page.locator('#signupPassword').fill('Test1234567890');  
-    await page.getByLabel('Re-enter password').click();
-    await page.getByLabel('Re-enter password').fill('Test1234567890');
+  test('Last wrong Name', async ({ page }) => {
+    const registrationPage = new RegistrationPage(page);
+    const uniqueEmail = `aqa-${Date.now()}@test.com`;
+  
+    await registrationPage.navigateToRegistrationPage();
+  
+    await registrationPage.fillRegistrationForm('vikatest', 'Last name is invalid', uniqueEmail, 'Test1234567890');
+  
+  });
+  
+
+  test('Email Wrong Test', async ({ page }) => {
+    const registrationPage = new RegistrationPage(page);
+    
+    await registrationPage.navigateToRegistrationPage();
+  
+    await registrationPage.fillRegistrationForm('vikatest', 'vikatest', 'Email is invalid', 'Test1234567890');
     
   });
-  test('emailwrong', async ({ page }) => {
-    await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await page.getByRole('button', { name: 'Registration' }).click();
-    await page.locator('#signupName').click();
-    await page.locator('#signupName').fill('vikatest');
-    await page.locator('#signupLastName').click();
-    await page.locator('#signupLastName').fill('vikatest');
-    await page.getByLabel('Name').click();
-    await page.getByLabel('Name').fill('Email is invalid');
-    await page.locator('#signupPassword').click();
-    await page.locator('#signupPassword').fill('Test1234567890');  
-    await page.getByLabel('Re-enter password').click();
-    await page.getByLabel('Re-enter password').fill('Test1234567890');
-  });
-  test('wrongpass', async ({ page }) => {
-    await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await page.getByRole('button', { name: 'Registration' }).click();
-    await page.locator('#signupName').click();
-    await page.locator('#signupName').fill('vikatest');
-    await page.locator('#signupLastName').click();
-    await page.locator('#signupLastName').fill('vikatest');
-    await page.getByLabel('Name').click();
-    await page.getByLabel('Name').fill('vika@test.com');
-    await page.locator('#signupPassword').click();
-    await page.locator('#signupPassword').fill('0');  
-    await page.getByLabel('Re-enter password').click();
-    await page.getByLabel('Re-enter password').fill('Test1234567890');
-    await page.getByRole('button', { name: 'Register' }).click();
+  
+
+  test('Wrong Pass Test', async ({ page }) => {
+    const registrationPage = new RegistrationPage(page);
+    const uniqueEmail = `aqa-${Date.now()}@test.com`;
+  
+    await registrationPage.navigateToRegistrationPage();
+  
+    await registrationPage.fillRegistrationForm('vikatest', 'vikatest', uniqueEmail, '0');
 
   });
-
-test('wrongREpass', async ({ page }) => {
-    await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await page.getByRole('button', { name: 'Registration' }).click();
-    await page.locator('#signupName').click();
-    await page.locator('#signupName').fill('vikatest');
-    await page.locator('#signupLastName').click();
-    await page.locator('#signupLastName').fill('vikatest');
-    await page.getByLabel('Name').click();
-    await page.getByLabel('Name').fill('vika@test.com');
-    await page.locator('#signupPassword').click();
-    await page.locator('#signupPassword').fill('Test1234567890');  
-    await page.getByLabel('Re-enter password').click();
-    await page.getByLabel('Re-enter password').fill('Test123456');
-   
-  });
+ 
