@@ -1,79 +1,59 @@
+// @ts-check
 import { defineConfig, devices } from '@playwright/test';
+require('dotenv').config({
+  path: `.env`, // Убедитесь, что указываете путь к существующему файлу
+});
+
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-/**
- * See https://playwright.dev/docs/test-configuration.
+ * Playwright Configuration
+ * https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
+  /* Директория с тестами */
   testDir: './tests',
-  /* Run tests in files in parallel */
+  /* Параллельный запуск тестов */
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  /* Защитный механизм для CI, запрещающий использование test.only */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
+  /* Повторение тестов на CI в случае неудачи */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  /* Количество воркеров на CI */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  /* Репортер для отображения результатов */
   reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  /* Базовые настройки для всех проектов */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    actionTimeout: 70_000, // Таймаут для действий
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    // URL для вашего тестового приложения
+   
+    trace: 'on-first-retry', // Сбор трассы при первой ошибке
   },
 
-  /* Configure projects for major browsers */
+  /* Настройка проектов для разных браузеров */
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
-
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    // Дополнительные проекты можно добавить здесь
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* Настройка локального dev-сервера перед запуском тестов */
+  webServer: process.env.CI
+    ? {
+        command: 'npm run start',
+        url: process.env.BASE_URL,
+        reuseExistingServer: true,
+      }
+    : undefined,
 });
