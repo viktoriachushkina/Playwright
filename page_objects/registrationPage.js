@@ -13,12 +13,19 @@ export class RegistrationPage {
     }
   
     async navigateToRegistrationPage() {
-      await this.page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
+      console.log('Navigating to:', process.env.BASE_URL);
+      if (!process.env.BASE_URL) {
+        throw new Error('BASE_URL is not defined in environment variables.');
+      }
+      await this.page.goto(process.env.BASE_URL);
       await this.signInButton.click();
       await this.registrationButton.click();
     }
+    
+    
   
     async fillRegistrationForm(name, lastName, email, password) {
+      await this.nameInput.waitFor({ state: 'visible' });
       await this.nameInput.fill(name);
       await this.lastNameInput.fill(lastName);
       await this.emailInput.fill(email);
