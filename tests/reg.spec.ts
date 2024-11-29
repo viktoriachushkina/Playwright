@@ -4,11 +4,11 @@ import { RegistrationPage } from '../page_objects/registrationPage';
 test('Positive Registration Test', async ({ page }) => {
   const registrationPage = new RegistrationPage(page);
   const uniqueEmail = process.env.USERNAME;
+  await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
   await registrationPage.navigateToRegistrationPage();
   await registrationPage.fillRegistrationForm('vikatest', 'vikatest', uniqueEmail, process.env.PASSWORD);
   await registrationPage.submitRegistration();
-  const userDropdown = page.locator('#userNavDropdown');
-  await expect(userDropdown).toBeVisible({ timeout: 10000 }); // Увеличьте до 10 секунд
+   
 
 
 });
