@@ -24,12 +24,14 @@ export default defineConfig({
   reporter: 'html',
   /* Базовые настройки для всех проектов */
   use: {
-    actionTimeout: 70_000, // Таймаут для действий
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
-    // URL для вашего тестового приложения
-   
-    trace: 'on-first-retry', // Сбор трассы при первой ошибке
+    baseURL: 'https://qauto.forstudy.space',
+    httpCredentials: {
+      username: 'guest',
+      password: 'welcome2qauto',
+    },
   },
+  
+   
 
   /* Настройка проектов для разных браузеров */
   projects: [
